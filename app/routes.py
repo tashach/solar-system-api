@@ -14,8 +14,8 @@ planets = [
     Planet(4, "Mars", "dusty and cold", "red")]
 
 planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
-@planets_bp.route('', methods = ["GET"])
 
+@planets_bp.route('', methods = ["GET"])
 def get_all_planets():
     planet_dicts = []
 
@@ -29,3 +29,25 @@ def get_all_planets():
         planet_dicts.append(dict)
 
     return jsonify(planet_dicts), 200
+
+@planets_bp.route("/<planet_id>", methods = ["GET"])
+def get_single_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError: 
+        return jsonify({"msg":f"invalid data type: {planet_id}"}), 400
+
+    chosen_planet = None
+    for planet in planets:
+        if planet.id == planet_id:
+            chosen_planet = planet
+
+            return_planet = {
+                "id": chosen_planet.id,
+                "name": chosen_planet.name,
+                "description": chosen_planet.description,
+                "color": chosen_planet.color
+            }
+            return jsonify(return_planet), 200
+    if planet_id not in planets:
+        return jsonify({"msg": f"can't find planet id {planet_id}"}), 404
