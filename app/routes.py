@@ -19,24 +19,23 @@ planets = [
 
 
 
+planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
 
 
-'''
 @planets_bp.route('', methods = ["GET"])
 def get_all_planets():
-    planet_dicts = []
+    planet_response = []
+    planets = Planet.query.all()
 
-    for planet in planets:
-        dict = {
+    for planet in planets:        
+        planet_response.append({
             "id": planet.id, 
             "name": planet.name, 
             "description": planet.description, 
-            "color": planet.color}
+            "color": planet.color})
 
-        planet_dicts.append(dict)
-
-    return jsonify(planet_dicts), 200
-
+    return jsonify(planet_response), 200
+'''
 @planets_bp.route("/<planet_id>", methods = ["GET"])
 def get_single_planet(planet_id):
     try:
@@ -60,7 +59,7 @@ def get_single_planet(planet_id):
         return jsonify({"msg": f"can't find planet id {planet_id}"}), 404
     
 '''   
-planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
+
  
 @planets_bp.route("", methods=['POST'])
 def create_a_planet():
