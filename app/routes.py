@@ -84,10 +84,16 @@ def update_one_planet(planet_id):
     
     try:
         update_planet.name = request_body["name"]
+    except KeyError:
+        return jsonify({"message":"missing name information"}), 400
+    try:
         update_planet.description = request_body["description"]
+    except KeyError:
+        return jsonify({"message":"missing planet description information"}), 400
+    try:
         update_planet.color = request_body["color"]
     except KeyError:
-        return jsonify({"message":"missing necessary information"}), 400
+        return jsonify({"message":"missing planet color information"}), 400
     
     db.session.commit()
     
