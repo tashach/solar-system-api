@@ -30,11 +30,7 @@ def get_all_planets():
 
     for planet in planets:     
         planet_response.append(planet.to_dict())   
-        # planet_response.append({
-        #     "id": planet.id, 
-        #     "name": planet.name, 
-        #     "description": planet.description, 
-        #     "color": planet.color})
+
 
     return jsonify(planet_response), 200
 '''
