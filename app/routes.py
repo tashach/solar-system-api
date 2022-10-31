@@ -77,6 +77,22 @@ def get_one_planet(planet_id):
     chosen_planet = validate_planet(planet_id)
     return jsonify(chosen_planet.to_dict()), 200
     
+@planets_bp.route("/<planet_id>", methods=["PUT"])
+def update_one_planet(planet_id):
+    update_planet = validate_planet(planet_id)
+    request_body = request.get_json()
+    
+    try:
+        update_planet.name = request_body["name"]
+        update_planet.description = request_body["description"]
+        update_planet.color = request_body["color"]
+    except KeyError:
+        return jsonify({"message":"missing necessary information"}), 400
+    
+    db.session.commit()
+    
+    return make_response(f"Planet {planet_id} successfully updated", 200)    
+    
     
 
 def validate_planet(planet_id):
