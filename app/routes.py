@@ -60,7 +60,6 @@ def get_single_planet(planet_id):
     
 '''   
 
- 
 @planets_bp.route("", methods=['POST'])
 def create_a_planet():
     request_body = request.get_json()  
