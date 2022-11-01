@@ -25,14 +25,18 @@ planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
 
 @planets_bp.route('', methods = ["GET"])
 def get_all_planets():
+    name_query_value = request.args.get("name")
+    if name_query_value is not None:
+        planets = Planet.query.filter_by(name = name_query_value)
+    else:
+        planets = Planet.query.all()
+        
     planet_response = []
-    planets = Planet.query.all()
-
     for planet in planets:     
         planet_response.append(planet.to_dict())   
 
-
     return jsonify(planet_response), 200
+    
 '''
 @planets_bp.route("/<planet_id>", methods = ["GET"])
 def get_single_planet(planet_id):
