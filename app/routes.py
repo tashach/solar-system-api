@@ -85,19 +85,31 @@ def get_one_planet(planet_id):
 def update_one_planet(planet_id):
     update_planet = validate_planet(planet_id)
     request_body = request.get_json()
+    planet_attributes = ["name", "description", "color"]
+    response = ""
     
     try:
         update_planet.name = request_body["name"]
-    except KeyError:
-        return jsonify({"message":"missing name information"}), 400
-    try:
         update_planet.description = request_body["description"]
-    except KeyError:
-        return jsonify({"message":"missing planet description information"}), 400
-    try:
         update_planet.color = request_body["color"]
     except KeyError:
-        return jsonify({"message":"missing planet color information"}), 400
+        for attribute in planet_attributes:
+            if attribute not in request_body:
+                response += attribute + ", "
+        return jsonify({"message": f"Planet #{planet_id} missing {response[:-2]}"}), 200
+
+    # try:
+    #     update_planet.name = request_body["name"]
+    # except KeyError:
+    #     return jsonify({"message":"missing name information"}), 400
+    # try:
+    #     update_planet.description = request_body["description"]
+    # except KeyError:
+    #     return jsonify({"message":"missing planet description information"}), 400
+    # try:
+    #     update_planet.color = request_body["color"]
+    # except KeyError:
+    #     return jsonify({"message":"missing planet color information"}), 400
     
     db.session.commit()
     
