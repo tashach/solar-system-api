@@ -80,12 +80,12 @@ def create_a_planet():
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
-    chosen_planet = validate_planet(planet_id)
+    chosen_planet = validate_model_id(Planet, planet_id)
     return jsonify(chosen_planet.to_dict()), 200
     
 @planets_bp.route("/<planet_id>", methods=["PUT"])
 def update_one_planet(planet_id):
-    update_planet = validate_planet(planet_id)
+    update_planet = validate_model_id(Planet, planet_id)
     request_body = request.get_json()
     planet_attributes = ["name", "description", "color"]
     response = ""
@@ -121,7 +121,7 @@ def update_one_planet(planet_id):
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
 def delete_one_planet(planet_id):
     
-    planet_to_delete = validate_planet(planet_id)
+    planet_to_delete = validate_model_id(Planet,planet_id)
     
     db.session.delete(planet_to_delete)
     db.session.commit()
@@ -129,15 +129,15 @@ def delete_one_planet(planet_id):
     return jsonify({"message":f"Planet {planet_to_delete.name} id #{planet_id} successfully deleted"}),200
 
 
-def validate_planet(planet_id):
+def validate_model_id(cls,model_id):
     try:
-        planet_id = int(planet_id)
+        model_id = int(model_id)
     except ValueError:
-        abort(make_response({"message":f"Planet id {planet_id} is invalid"},400))
+        abort(make_response({"message":f"{cls.__name__} id {model_id} is invalid"},400))
     
-    planet = Planet.query.get(planet_id)
+    chosen_object = cls.query.get(model_id)
     
-    if planet is None:
-        abort(make_response({"message":f"Planet {planet_id} not found"}, 404))
+    if chosen_object is None:
+        abort(make_response({"message":f"{cls.__name__} {model_id} not found"}, 404))
         
-    return planet
+    return chosen_object
