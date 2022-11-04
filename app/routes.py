@@ -66,9 +66,11 @@ def get_single_planet(planet_id):
 def create_a_planet():
     request_body = request.get_json()  #we are signaling to flask to look for anything with json object
     
-    new_planet = Planet(name=request_body['name'],
-                        description=request_body['description'],
-                        color=request_body['color'])
+    # new_planet = Planet(name=request_body['name'],
+    #                     description=request_body['description'],
+    #                     color=request_body['color'])
+    
+    new_planet=Planet.from_dict(request_body)
     
     db.session.add(new_planet)
     db.session.commit()
