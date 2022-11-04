@@ -98,7 +98,7 @@ def update_one_planet(planet_id):
         for attribute in planet_attributes:
             if attribute not in request_body:
                 response += attribute + ", "
-        return jsonify({"message": f"Planet #{planet_id} missing {response[:-2]}"}), 200
+        return jsonify({"message": f"Planet #{planet_id} missing {response[:-2]}"}), 400
 
     # try:
     #     update_planet.name = request_body["name"]
@@ -115,7 +115,7 @@ def update_one_planet(planet_id):
     
     db.session.commit()
     
-    return jsonify({"message":f"Planet {update_planet.name} id#{planet_id} successfully updated"}), 200
+    return jsonify({"message":f"Planet {update_planet.name} id #{planet_id} successfully updated"}), 200
     
     
 @planets_bp.route("/<planet_id>", methods=["DELETE"])
